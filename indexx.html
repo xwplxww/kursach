@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик задач</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-blue: #05d9e8;
+            --neon-purple: #d300c5;
+            --dark-bg: #0d0221;
+            --darker-bg: #05010e;
+            --text-light: #f8f8f8;
+            --text-dim: #b8b8b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 2rem;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 42, 109, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(5, 217, 232, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(13, 2, 33, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 0 15px rgba(255, 42, 109, 0.3),
+                0 0 30px rgba(5, 217, 232, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: glow 8s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 
+                    0 0 15px rgba(255, 42, 109, 0.3),
+                    0 0 30px rgba(5, 217, 232, 0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 0 20px rgba(255, 42, 109, 0.5),
+                    0 0 40px rgba(5, 217, 232, 0.3);
+            }
+            100% {
+                box-shadow: 
+                    0 0 25px rgba(255, 42, 109, 0.4),
+                    0 0 50px rgba(213, 0, 197, 0.3);
+            }
+        }
+
+        h1 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 42, 109, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .task-form {
+            display: flex;
+            margin-bottom: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .task-input {
+            flex: 1;
+            padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .task-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(5, 217, 232, 0.3);
+        }
+
+        .task-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .task-form .material-icons {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neon-blue);
+            font-size: 1.5rem;
+        }
+
+        .add-btn {
+            margin-left: 1rem;
+            padding: 0 2rem;
+background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 42, 109, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 42, 109, 0.6);
+        }
+
+        .add-btn:active {
+            transform: translateY(0);
+        }
+
+        .add-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent,
+                transparent,
+                transparent,
+                rgba(255, 255, 255, 0.1)
+            );
+            transform: rotate(30deg);
+            transition: all 0.5s ease;
+        }
+
+        .add-btn:hover::after {
+            left: 100%;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.2rem;
+            background: none;
+            border: none;
+            border-radius: 20px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .filter-btn.active {
+            color: var(--neon-blue);
+            background-color: rgba(5, 217, 232, 0.1);
+        }
+
+        .filter-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--neon-blue);
+            transition: width 0.3s ease;
+        }
+
+        .filter-btn.active::after {
+            width: 50%;
+        }
+
+        .clear-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .clear-btn:hover {
+            color: var(--neon-pink);
+        }
+
+        .task-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.07);
+        }
+
+        .task-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--neon-pink), var(--neon-purple));
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .task-item:hover::before {
+            opacity: 1;
+        }
+.task-checkbox {
+            appearance: none;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            margin-right: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .task-checkbox:checked {
+            background-color: var(--neon-blue);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(5, 217, 232, 0.5);
+        }
+
+        .task-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 1rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .task-text {
+            flex: 1;
+            word-break: break-word;
+            transition: all 0.3s ease;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            color: var(--text-dim);
+            opacity: 0.7;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+
+        .task-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .task-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--neon-pink);
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-dim);
+            opacity: 0.5;
+        }
+
+        .empty-state .material-icons {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+            opacity: 0.3;
+        }
+
+        .stats {
+            margin-top: 1.5rem;
+            text-align: right;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .neon-text {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(5, 217, 232, 0.5);
+        }
+
+        /* Анимация добавления задачи */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-item {
+            animation: slideIn 0.4s ease forwards;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .task-form {
+                flex-direction: column;
+            }
+            
+            .add-btn {
+                margin-left: 0;
+                margin-top: 1rem;
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.2rem;
+                border-radius: 12px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .filter-btns {
+                width: 100%;
+                justify-content: space-between;
+}
+            .filter-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="material-icons">bolt</span>
+            Планировщик задач
+        </h1>
+        
+        <div class="task-form">
+            <span class="material-icons">add_circle</span>
+            <input type="text" class="task-input" placeholder="Добавить новую задачу..." id="taskInput">
+            <button class="add-btn" id="addTaskBtn">Добавить</button>
+        </div>
+        
+        <div class="controls">
+            <div class="filter-btns">
+                <button class="filter-btn active" data-filter="all">Все</button>
+                <button class="filter-btn" data-filter="active">Активные</button>
+                <button class="filter-btn" data-filter="completed">Завершённые</button>
+            </div>
+            <button class="clear-btn" id="clearCompleted">
+                <span class="material-icons">delete_forever</span>
+                Очистить
+            </button>
+        </div>
+        
+        <ul class="task-list" id="taskList">
+            <div class="empty-state">
+                <span class="material-icons">inventory_2</span>
+                <p>Пока нет задач</p>
+            </div>
+        </ul>
+        
+        <div class="stats">
+            Всего: <span class="neon-text" id="totalCount">0</span> | 
+            Активных: <span class="neon-text" id="activeCount">0</span> | 
+            Завершённых: <span class="neon-text" id="completedCount">0</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы DOM
+            const taskInput = document.getElementById('taskInput');
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            const taskList = document.getElementById('taskList');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const clearCompletedBtn = document.getElementById('clearCompleted');
+            const totalCountEl = document.getElementById('totalCount');
+            const activeCountEl = document.getElementById('activeCount');
+            const completedCountEl = document.getElementById('completedCount');
+            
+            // Состояние приложения
+            let tasks = JSON.parse(localStorage.getItem('neon-tasks')) || [];
+            let currentFilter = 'all';
+            
+            // Инициализация
+            init();
+            
+            function init() {
+                renderTasks();
+                setupEventListeners();
+                updateStats();
+            }
+            
+            function setupEventListeners() {
+                // Добавление задачи
+                addTaskBtn.addEventListener('click', addTask);
+                taskInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') addTask();
+                });
+                
+                // Фильтрация
+                filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentFilter = btn.dataset.filter;
+                        renderTasks();
+                    });
+                });
+                
+                // Очистка выполненных
+                clearCompletedBtn.addEventListener('click', clearCompleted);
+                
+                // Делегирование событий для динамических элементов
+                taskList.addEventListener('click', handleTaskActions);
+            }
+            
+            function handleTaskActions(e) {
+const taskElement = e.target.closest('.task-item');
+                if (!taskElement) return;
+                
+                const taskId = parseInt(taskElement.dataset.id);
+                
+                // Удаление
+                if (e.target.closest('.delete-btn')) {
+                    deleteTask(taskId);
+                    return;
+                }
+                
+                // Переключение статуса
+                if (e.target.classList.contains('task-checkbox')) {
+                    toggleTaskStatus(taskId);
+                }
+            }
+            
+            function addTask() {
+                const text = taskInput.value.trim();
+                if (text) {
+                    const newTask = {
+                        id: Date.now(),
+                        text: text,
+                        completed: false,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    tasks.unshift(newTask);
+                    saveTasks();
+                    renderTasks();
+                    updateStats();
+                    
+                    // Сброс и анимация
+                    taskInput.value = '';
+                    taskInput.focus();
+                    
+                    // Анимация добавления
+                    if (taskList.children.length > 0 && taskList.children[0].classList.contains('task-item')) {
+                        taskList.children[0].style.animation = 'slideIn 0.4s ease';
+                    }
+                }
+            }
+            
+            function deleteTask(id) {
+                tasks = tasks.filter(task => task.id !== id);
+                saveTasks();
+                renderTasks();
+                updateStats();
+            }
+            
+            function toggleTaskStatus(id) {
+                tasks = tasks.map(task => 
+                    task.id === id ? { ...task, completed: !task.completed } : task
+                );
+                saveTasks();
+                updateStats();
+                
+                // Анимация изменения статуса
+                const taskElement = document.querySelector(.task-item[data-id="${id}"]);
+                if (taskElement) {
+                    taskElement.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        taskElement.style.transform = '';
+                    }, 300);
+                }
+            }
+            
+            function clearCompleted() {
+                // Анимация перед удалением
+                document.querySelectorAll('.task-item').forEach(item => {
+                    if (item.querySelector('.task-checkbox').checked) {
+                        item.style.transform = 'translateX(-100%)';
+                        item.style.opacity = '0';
+                    }
+                });
+                
+                setTimeout(() => {
+                    tasks = tasks.filter(task => !task.completed);
+                    saveTasks();
+                    renderTasks();
+                    updateStats();
+                }, 300);
+            }
+            
+            function saveTasks() {
+                localStorage.setItem('neon-tasks', JSON.stringify(tasks));
+            }
+            
+            function renderTasks() {
+                if (tasks.length === 0) {
+                    taskList.innerHTML = 
+                        <div class="empty-state">
+                            <span class="material-icons">inventory_2</span>
+                            <p>Пока нет задач</p>
+                        </div>
+                    ;
+                    return;
+                }
+                
+                let tasksToRender = tasks;
+                
+                // Фильтрация
+                if (currentFilter === 'active') {
+
+tasksToRender = tasks.filter(task => !task.completed);
+                } else if (currentFilter === 'completed') {
+                    tasksToRender = tasks.filter(task => task.completed);
+                }
+                
+                if (tasksToRender.length === 0) {
+                    taskList.innerHTML = 
+                        <div class="empty-state">
+                            <span class="material-icons">search_off</span>
+                            <p>Нет задач по выбранному фильтру</p>
+                        </div>
+                    ;
+                    return;
+                }
+                
+                taskList.innerHTML = tasksToRender.map(task => 
+                    <li class="task-item" data-id="${task.id}">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                        <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                        <div class="task-actions">
+                            <button class="task-btn delete-btn" title="Удалить">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </li>
+                ).join('');
+            }
+            
+            function updateStats() {
+                const total = tasks.length;
+                const completed = tasks.filter(task => task.completed).length;
+                const active = total - completed;
+                
+                totalCountEl.textContent = total;
+                activeCountEl.textContent = active;
+                completedCountEl.textContent = completed;
+                
+                // Анимация изменения цифр
+                [totalCountEl, activeCountEl, completedCountEl].forEach(el => {
+                    el.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        el.style.transform = '';
+                    }, 300);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
