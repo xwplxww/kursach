@@ -1,85 +1,76 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 1. Получаем элементы правильно
     const authForm = document.getElementById('authForm');
-    const passwordInput = document.getElementById('password');
     const passwordToggle = document.querySelector('.password-toggle');
-    const particles = document.querySelector('.particles');
-
-    // Показать/скрыть пароль
-    passwordToggle.addEventListener('click', function() {
-        const isPassword = passwordInput.type === 'password';
-        passwordInput.type = isPassword ? 'text' : 'password';
-        passwordToggle.innerHTML = isPassword ? 
-            '<span class="material-icons">visibility_off</span>' : 
-            '<span class="material-icons">visibility</span>';
-    });
-
-    // Создание дополнительных частиц
-    function createParticles() {
-        for (let i = 0; i < 5; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            
-            // Случайные параметры
-            const size = Math.random() * 60 + 40;
-            const posX = Math.random() * 100;
-            const posY = Math.random() * 100;
-            const duration = Math.random() * 20 + 10;
-            const delay = Math.random() * -20;
-            
-            particle.style.width = ${size}px;
-            particle.style.height = ${size}px;
-            particle.style.top = ${posY}%;
-            particle.style.left = ${posX}%;
-            particle.style.animationDuration = ${duration}s;
-            particle.style.animationDelay = ${delay}s;
-            
-            particles.appendChild(particle);
-        }
+    const passwordInput = document.getElementById('password');
+    
+    // 2. Проверяем, что элементы существуют
+    if (!authForm, !passwordToggle,  !passwordInput) {
+        console.error('Не найдены необходимые элементы!');
+        return;
     }
 
-    // Обработка формы
-    authForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+    // 3. Обработчик переключения видимости пароля
+    passwordToggle.addEventListener('click', function() {
+        // Переключаем тип поля ввода
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
         
-        const username = document.getElementById('username').value;
-        const password = passwordInput.value;
+        // Меняем иконку
+        const icon = passwordToggle.querySelector('.material-icons');
+        if (icon) {
+            icon.textContent = isPassword ? 'visibility_off' : 'visibility';
+        }
+        
+        // Анимация
+        passwordToggle.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            passwordToggle.style.transform = 'scale(1)';
+        }, 200);
+    });
+
+    // 4. Обработчик отправки формы
+    authForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Важно: предотвращаем перезагрузку страницы
+        
+        const username = document.getElementById('username').value.trim();
+        const password = passwordInput.value.trim();
         const remember = document.getElementById('remember').checked;
         
-        // Анимация загрузки
-        const authBtn = document.querySelector('.auth-btn');
-        authBtn.innerHTML = '<span>Авторизация...</span>';
-        authBtn.disabled = true;
+        // Валидация
+        if (!username || !password) {
+            alert('Пожалуйста, заполните все поля');
+            return;
+        }
         
-        // Имитация запроса
+        // Имитация авторизации
+        console.log('Отправка данных:', {
+            username: username,
+            password: password,
+            remember: remember
+        });
+        
+        // Перенаправление после "успешной" авторизации
         setTimeout(() => {
-            console.log('Авторизация:', { username, password, remember });
-            
-            // Успешная авторизация
-            authBtn.innerHTML = '<span>Успешно!</span>';
-            authBtn.style.background = 'linear-gradient(135deg, #00e676, #00c853)';
-            
-            setTimeout(() => {
-                alert(Добро пожаловать, ${username}!);
-                authBtn.innerHTML = '<span>Войти</span>';
-                authBtn.style.background = 'linear-gradient(135deg, var(--neon-pink), var(--neon-purple))';
-                authBtn.disabled = false;
-            }, 1000);
-            
-        }, 1500);
+            window.location.href = 'http://127.0.0.1:5500/indexx.html'; // Замените на ваш URL
+        }, 1000);
     });
 
-    // Создаем частицы при загрузке
-    createParticles();
+    // 5. Обработчик для кнопки "Забыли пароль?"
+    const forgotPassword = document.querySelector('.forgot-password');
+    if (forgotPassword) {
+        forgotPassword.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Функция восстановления пароля в разработке');
+        });
+    }
 
-    // Анимация ввода
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.querySelector('.input-icon').style.color = 'var(--neon-pink)';
+    // 6. Обработчик для кнопки "Регистрация"
+    const registerLink = document.querySelector('.auth-link');
+    if (registerLink) {
+        registerLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Форма регистрации будет доступна позже');
         });
-        
-        input.addEventListener('blur', function() {
-            this.parentElement.querySelector('.input-icon').style.color = 'var(--neon-blue)';
-        });
-    });
+    }
 });
