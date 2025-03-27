@@ -3,50 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Планировщик задач</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="styless.css">
+    <title> Планировщик Задач </title>
 </head>
 <body>
     <div class="container">
-        <h1>
-            <span class="material-icons">bolt</span>
-            Планировщик задач
-        </h1>
+        <header>
+            <h1> Планировщик задач</h1>
+        </header>
         
         <div class="task-form">
-            <span class="material-icons">add_circle</span>
-            <input type="text" class="task-input" placeholder="Добавить новую задачу..." id="taskInput">
-            <button class="add-btn" id="addTaskBtn">Добавить</button>
+            <input type="text" class="task-input" placeholder="Введите новую задачу...">
+            <button class="add-btn">Добавить</button>
         </div>
         
-        <div class="controls">
-            <div class="filter-btns">
-                <button class="filter-btn active" data-filter="all">Все</button>
-                <button class="filter-btn" data-filter="active">Активные</button>
-                <button class="filter-btn" data-filter="completed">Завершённые</button>
-            </div>
-            <button class="clear-btn" id="clearCompleted">
-                <span class="material-icons">delete_forever</span>
-                Очистить
-            </button>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Все задачи</button>
+            <button class="filter-btn" data-filter="active">Активные</button>
+            <button class="filter-btn" data-filter="completed">Завершённые</button>
         </div>
         
-        <ul class="task-list" id="taskList">
-            <div class="empty-state">
-                <span class="material-icons">inventory_2</span>
-                <p>Пока нет задач</p>
-            </div>
+        <ul class="task-list">
         </ul>
         
         <div class="stats">
-            Всего: <span class="neon-text" id="totalCount">0</span> | 
-            Активных: <span class="neon-text" id="activeCount">0</span> | 
-            Завершённых: <span class="neon-text" id="completedCount">0</span>
+            <p>Всего задач: <span class="total-tasks">0</span></p>
+            <p>Завершено: <span class="completed-tasks">0</span></p>
+            <button class="clear-btn">Очистить завершённые</button>
         </div>
     </div>
-        
-        <script src="index.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>

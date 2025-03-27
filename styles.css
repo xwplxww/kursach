@@ -4,8 +4,8 @@
     --neon-purple: #d300c5;
     --dark-bg: #0d0221;
     --darker-bg: #05010e;
-    --text-light: #f8f8f8;
-    --text-dim: #b8b8b8;
+    --text-light: hsl(0, 0%, 97%);
+    --text-dim: #05d9e8;
 }
 
 * {
