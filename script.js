@@ -66,11 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 6. Обработчик для кнопки "Регистрация"
-    const registerLink = document.querySelector('.auth-link');
-    if (registerLink) {
-        registerLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Форма регистрации будет доступна позже');
-        });
-    }
+    setTimeout(() => {
+        window.location.href = 'http://127.0.0.1:5500/scriptt.html#'; // Замените на ваш URL
+    }, 1000);
+});
 });

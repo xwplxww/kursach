@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Неоновая Регистрация</title>
+    <link rel="stylesheet" href="stylesss.css">
+</head>
+<body>
+    <div class="neon-container">
+        <div class="neon-sign">Регистрация</div>
+        
+        <form id="registerForm" class="neon-form">
+            <div class="input-group">
+                <input type="text" id="username" required>
+                <span class="neon-bar"></span>
+                <label>Имя пользователя</label>
+            </div>
+            
+            <div class="input-group">
+                <input type="email" id="email" required>
+                <span class="neon-bar"></span>
+                <label>Email</label>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" required minlength="6">
+                <span class="neon-bar"></span>
+                <label>Пароль (мин. 6 символов)</label>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="confirmPassword" required>
+                <span class="neon-bar"></span>
+                <label>Подтвердите пароль</label>
+                <span id="passwordError" class="error-message"></span>
+            </div>
+            
+            <button type="submit" class="neon-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Зарегистрироваться
+            </button>
+        </form>
+        
+        <div class="neon-links">
+            <a href="#" class="neon-link">Уже есть аккаунт? Войти</a>
+        </div>
+    </div>
+    
+    <script src="scripttt.js"></script>
+</body>
+</html>
