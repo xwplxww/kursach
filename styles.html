@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header text-center mb-3">
+            <h1>Регистрация</h1>
+        </div>
+        
+        <form id="registerForm">
+            <div class="input-group">
+                <input type="text" id="usernameField" required>
+                <label for="usernameField">Имя пользователя</label>
+            </div>
+            
+            <div class="input-group">
+                <input type="email" id="emailField" required>
+                <label for="emailField">Email</label>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="passwordField" required minlength="6">
+                <label for="passwordField">Пароль (мин. 6 символов)</label>
+                <span class="password-toggle" onclick="togglePassword('passwordField')">Показать</span>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="confirmPasswordField" required>
+                <label for="confirmPasswordField">Подтвердите пароль</label>
+                <span class="password-toggle" onclick="togglePassword('confirmPasswordField')">Показать</span>
+                <span id="passwordError" class="error-message"></span>
+            </div>
+            
+            <button type="submit" id="registerBtn" class="auth-btn">
+                Зарегистрироваться
+            </button>
+            
+            <div class="auth-links text-center mt-3">
+                <a href="script.html" class="auth-link">Уже есть аккаунт? Войти</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    
+                    const registerBtn = document.getElementById('registerBtn');
+                    registerBtn.innerHTML = '<span class="loading">Регистрация...</span>';
+                    registerBtn.disabled = true;
+                    
+                    
+                    setTimeout(() => {
+                        
+                        window.location.href = 'index.html';
+                    }, 1500);
+                }
+            });
+            
+            function validateForm() {
+                
+                return true; 
+            }
+            
+            function togglePassword(fieldId) {
+               
+            }
+        });
+    </script>
+    
+    <style>
+        .loading {
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</body>
+</html>
