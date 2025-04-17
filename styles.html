@@ -46,38 +46,8 @@
             </div>
         </form>
     </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const registerForm = document.getElementById('registerForm');
-            
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                if (validateForm()) {
-                    
-                    const registerBtn = document.getElementById('registerBtn');
-                    registerBtn.innerHTML = '<span class="loading">Регистрация...</span>';
-                    registerBtn.disabled = true;
-                    
-                    
-                    setTimeout(() => {
-                        
-                        window.location.href = 'index.html';
-                    }, 1500);
-                }
-            });
-            
-            function validateForm() {
-                
-                return true; 
-            }
-            
-            function togglePassword(fieldId) {
-               
-            }
-        });
-    </script>
+
+    <script src="styles.js"></script>
     
     <style>
         .loading {
